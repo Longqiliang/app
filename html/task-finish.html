@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>已处理任务</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task.min.css"/>
+	</head>
+	<body>
+		<div class=" mui-content mui-scroll-wrapper" id="content">
+			<div class="mui-scroll">
+			    <ul id="task-list" class="task-list"></ul>				
+			</div>
+		</div>
+		<template id="task-list-tpl">
+			{%_.each(items,function(item){%}
+				<li data-id="{%=item.doc_id%}" data-index="{%=item.check_state%}" data-flow="{%=item.data_in_flow%}" data-txtid="{%=item.auditing_text_id%}">
+		    		<div class="task-item">
+		    			<div class="task-item-info">
+		    				<span class="item-person">{%=item.apply_person%}</span>
+		    				<span class="item-name mui-ellipsis">{%=item.doc_no_name%}</span>
+		    				{%if(item.check_state=="2"){%}
+		    					<span class="item-status item-status-pass">通过</span>
+		    				{%}else if(item.check_state=="3"){%}
+		    					<span class="item-status item-status-nopass">未通过</span>
+		    				{%}%}	
+		    			</div>
+		    			<div class="task-item-info mt22">
+		    				<span class="item-order-number mui-ellipsis">
+		    					{%=item.doc_no%}
+		    				</span>
+		    			    <span class="item-time ">
+		    			    	{%=item.apply_date%}
+		    			    </span>
+		    			</div>
+		    	    </div>
+		    	</li>
+			{%})%}    	
+		</template>
+		<script src="html5plus://ready"></script>
+		<script src="../dest/js/mui.min.js" ></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script src="../dest/js/mui.pullToRefresh.min.js" ></script>
+		<script src="../dest/js/mui.pullToRefresh.material.min.js" ></script>
+		<script src="../dest/js/underscore.min.js" ></script>
+        <script type="text/javascript">
+           	mui.init();
+        	var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+        	var _self;
+        	var w;
+        	var page_index = 0;
+        	var deceleration = mui.os.ios?0.003:0.0009;
+        	var listTpl = document.getElementById("task-list-tpl");
+        	var list = document.getElementById("task-list");
+			mui('.mui-scroll-wrapper').scroll({
+				bounce: false,
+				indicators: true, //是否显示滚动条
+				deceleration:deceleration
+			});
+      	    function plusReady() {
+      	    	_self = plus.webview.currentWebview();
+      	    	w = plus.nativeUI.showWaiting();
+        	    getData();
+	            mui("#task-list").on('tap','li',function(){
+	            	var self  = this;
+	            	var docId = self.getAttribute("data-id").trim();
+	            	var flow = self.getAttribute("data-flow").trim();
+	            	var txtId= self.getAttribute("data-txtid").trim();
+	            	var index = self.getAttribute("data-index").trim();
+	            	    index = parseInt(index);
+	            	var base = null;
+	            	switch(index){
+	            		case 2:
+	            		base='data:image/png;base64,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';
+	            	    break;
+	            	    case 3:
+	            	    base='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJwAAABZCAMAAAD8Q714AAAANlBMVEX////lMi3nR0ToWlfqamjseXfth4XvlZPxoaDyrKv0uLf1w8L3zs352Nj64uL87Oz99vb////Yj+v8AAAAAXRSTlMAQObYZgAABLlJREFUaN7tmtmarCgQhE+yJ4sQ7/+ycwECWnWmNqvb+ca8qW7b0r8hIjNB//y54oorrrjiivMGEdE5qVqcletUcHQvzsr1+3D0IM7K9Ut09EKck+on4ejNOCvXd+HogDgXl3D+i3QfDpUG9Dfg6JAA7LFwdGAs4MPgPiMJfHMoIn0Od8QoWSDsjzGK5rjgXbjj5jAAi5isqp1fUEO9TncUlXY+beiU4ZQb1xLZyJfm9SgsZThWCtnoEtl1uEryFnCviO4gLKE5JHQMroMTFkUOQAqsBRFR2urw+1za+lRWrhScnoQmiaRR43f/rF3fRZlubTiuk4YMJPno2w54roC9W4Hmn7uYNHnA/C2r8PQVdSicEEQklloW5XR1MYmJREG+4w9TicL4ijlyXmMtOaWVxbk8qm3O3VWEBDSqAIQmxPxsAXsWLtZbMc2fdndaRhH7I8hYdvk41asdBcf1BqvP2qdGlg+KlZJDoZ2Od5P/Ahyrv1rAojS/ZSISeVOaSGQgeCKx9avoCg0N3r5t14CiprRapVstIDQgGqsg8jvXMVAAooC4EXzpCg2tkj3db95pJIoYtTB3TyZ4alcVgCa9K0MSyA5QEgAyi8kUXf/ixX7zTpsTOPS0CkFmzf2JcuURGU6UbaKnBBgNGJK+AEDQ9ysCEeEtu2o3qlDyTgtAkwVQkI0kikgcMzjBLztnOiCttxU2A0Cy7b/d6l/HV+FGLwEskbVcU4EjaXWzAHE9IfLckNXvFxRJtKyjZBKA6uZVqURErjYGRb7giFGE2Gqp5TRXnoYFyACRjSSDnWzEUtN+HKOkExrppP96o0XTC3AKWHorkSehS9Flout5sp0fdlm6HuA5S+ik25JmXDB618iU9e65eZ3NHet9lOWUzUj1rp5nbs6f86vZ/aHBbdfRJA2nMg3+A7h5vcZYehfEY36D4NDTwnZ9x1jdIXf5pSUnxKYUqTmsliu9u3oA14qn0M6vvWxOHEcRZJSCRKEdCXN5tBiJG/tRIgXEAuSU0uj7Is/t6CNHWKXHAgShCsMMeXsAxfSy2IptHzc1RniX1ETBQiKsV14SW/38ds6k6ZZFer8lV3nbDMCL0Wf2z+RFnAueb+V3zn+aiIRhZq1e3msaUlO7erNuutQRNWvhqti6O8OrDcuuT0/hk42wdsKYw4Ao15zsqvyTXrb95ug79b9uIrUm+lO4NodCu768S7nK2+pugZaVxTq6exZx0wx/toU4yrHn1ea5rsndkHezACMRkQ3+NvuvCTHQgXSbfr+tyfU6SeVev2mRXfvLDVyafHzg0AUsLfv09lAMeTcraEB4IFRtybCr/0Ta6W/AjTlM8ETacirTwDRiYAECUUFJAN4apzfg+hzKgNKTOe8a2tXCtoogiO9xzXACUNr1rZgc2Sge8q4WkL1eK96WoC/t80+LzDocy6gRarddqgrszz5+GHZdAmt5x4O8rCt36X74sUhPZeH+jndVWBI/jLUtYGy2/eaU+D/S17Hb+Xyzmvu9Z1s3lzS7DYPffOR2c2G5fJS/zvdw8oRPKE//WPesT8L/z681nPlVkFfgrneOXoM760tk1xuB/93XKAfcnyuuuOKKK34g/gEyGFhmEEAbdAAAAABJRU5ErkJggg==';
+	            	    break;
+	            	}
+                    var nview = mui.createHeadView({
+                    	viewId:'task-order',
+						backgroundColor: '#293948',
+						borderColor:'#293948',
+						titleColor:'#ffffff',
+						title: '任务明细',
+						fontSize:'18px',
+						rightIcon:true,
+		                rightIconBase:base,
+						textAlign:'left'
+					});	
+	            	openView({
+	            		url:'task-order.html',
+	            		id:'task-order'
+	            	},{},{docId:docId,flowType:_self.flowType,flow:flow,txtId:txtId},nview);
+	            });
+			}
+        	if(window.plus) {
+				plusReady();
+			} else {
+        	    document.addEventListener('plusready',plusReady,false);
+            } 
+            mui("#content .mui-scroll").pullToRefresh({
+            	down: {
+					callback: function() {
+						var self = this;
+						setTimeout(function() {
+							getData(self);
+							self.endPullDownToRefresh();
+						}, 1000);
+					}
+				}
+			});
+            
+//          初始数据
+            function getData(){
+            	mui.ajax(URL+"/api/VF/GeHasAuditingDocByType",{
+					data:{
+						"flow_type":_self.flowType,
+						"page_index":1,
+						"page_size":10,
+						"token":token
+					},
+					dataType:'json',
+					type:'POST',
+					headers:{'Content-Type':'application/json'},
+					success:function(result){
+						var isSuccess = result.success;
+						var code = result.code;
+//		          	    console.log(isSuccess);
+		            	if(isSuccess==true){
+		            		w.close();
+//		            		document.querySelector(".mui-pull-bottom-tips").style.display ='block';
+//		            		tips[0].style.display = 'block';
+	            			var tplHtml  = _.template(listTpl.innerHTML);
+	            			list.innerHTML =  tplHtml(result);	
+		            	}else{
+		            		w.close();
+		            		if(code == "3"){
+		            			againData();
+		            		}
+		            	}	
+					},error:function(){
+						w.close();
+						reloadWvLoad();
+//						console.log("error");	
+					}
+				});
+            }
+//          上滑加载数据
+            function addData(){
+//			    page_index++;
+//			    console.log(page_index);
+//          	var data = {
+//          		"flow_type":_self.flowType,
+//          		"page_index":page_index,
+//          		"page_size":10,
+//          		"token":token
+//          	}
+//				mui.ajax(URL+"/api/VF/GeHasAuditingDocByType",{
+//					data:data,
+//					dataType:'json',
+//					type:'POST',
+//					headers:{'Content-Type':'application/json'},
+//					success:function(result){
+//						var isSuccess = result.success;
+////		          	    console.log(isSuccess);
+//		            	if(isSuccess==true){
+//		            		console.log(token);
+//		            		w.close();
+//		            		document.querySelector(".mui-pull-bottom-tips").style.display ='block';
+////		            		tips[0].style.display = 'block';
+//	            			var tplHtml = _.template(listTpl.innerHTML);
+//	            			appendHtml(list,tplHtml(result));	
+//		            	}else{
+//		            		w.close();
+//		            		console.log("false");
+//		            	}	
+//					},error:function(){
+//						w.close();
+//						reloadWvLoad();
+//						console.log("error");	
+//					}
+//				});
+            }
+       </script>
+	</body>
+</html>

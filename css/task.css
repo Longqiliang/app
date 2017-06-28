@@ -1,0 +1,231 @@
+.mui-control-content{
+	position: relative;
+    width: 100%;
+    height: 100%;
+    vertical-align: top;
+    white-space: normal;
+    background-color: white;
+	min-height:calc(100vh-(60px + 86px)) ;
+	min-height: -webkit-calc(100vh - (60px + 86px));
+}
+.mui-slider{
+	margin-top: 8px;
+	background-color: #FFFFFF;
+}
+.mui-slider-group {
+	background-color: #FFFFFF;
+}
+.mui-tit{
+	line-height: 44px;
+	padding-left: 5px;
+}
+.mui-content>.mui-table-view:first-child{
+	margin-top: 1px;
+}
+.mui-table-view:before,.mui-table-view:after{
+    height: 0;
+}
+.mui-table-view-cell:after{
+	height: 0;
+}
+.mui-segmented-control.task-oreder-tit{
+	border: 1px solid #02808f;
+	border-radius: inherit;
+	margin: 10px 0 8px;
+}
+.mui-segmented-control.task-oreder-tit .mui-control-item{
+	color: #FFFFFF;
+	background-color: #90a6b2;
+	border-color:#90a6b2 ;
+	text-align: left;
+	text-indent: 1em;
+}
+.mui-segmented-control.task-oreder-tit .mui-control-item.mui-active{
+	color: #fff;
+	background-color: #02808f;
+}
+.mui-navigate-right:after, .mui-push-right:after{
+	color: #000;
+}
+.approval-table-view{
+	background-color: #efeff4;
+	margin-bottom: 5px;
+}
+.approval-table-view li{
+	margin-bottom: 5px;
+	background-color: #fff;
+}
+.approval-business-tit{
+	padding-left:28px ;
+}
+[class^="approval-icon"]{
+	position: absolute;
+	top:50%;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+.approval-icon-pending,.approval-icon-finish{
+	width: 26px;
+	height: 26px;
+	
+	margin-right: 3px;
+}
+.approval-icon-finish{
+	background-image: url(../img/task_finish.png);
+}
+.approval-icon-pending{
+	background-image: url(../img/task_pending.png);
+}
+.approval-icon-order{
+	width: 22px;
+	height: 22px;
+	background-image: url(../img/order.png);
+}
+.approval-icon-right{
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: #007aff;
+	color: #fff;
+	right: 15px;
+}
+.approva-oreder-tit{
+	padding-left: 22px;
+}
+/*处理任务列表页*/
+ul.task-list{
+	list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+.task-list li{
+	padding:.5em .8em;
+	border-bottom: 2px solid #fff;
+	font-size: 16px;	
+}
+.task-list li:nth-child(odd){
+	background-color: #f0f0f0;
+}
+.task-list li:nth-child(even){
+	background-color: #dcdce1;
+}
+.mt22{
+	margin-top: 22px;
+}
+.task-item{
+	background: url(../img/pull-right.png) no-repeat right;
+	background-size: 22px 22px;
+}	
+.task-item-info{
+	position: relative;
+	display: flex;
+}
+.task-item-info span{
+	display: inline-block;
+	line-height: 24px;
+}
+.item-person{
+	padding:0 14px 0 22px;
+	background: url(../img/person.png)no-repeat;
+	background-size: 22px 22px;
+	color: #007aff;
+}
+.item-name{
+	flex: 1;
+	height: 24px;
+}
+.item-status{
+	padding-left:22px  ;
+	background-size: 18px 18px;
+	background-position: 2px 2px;
+	background-repeat: no-repeat;
+	font-size: 16px;
+	margin-right: 24px;
+	
+}
+.item-status-pass{
+	background-image: url(../img/pass.png);
+	color: #f80404;
+}
+.item-status-nopass{
+	background-image: url(../img/no_pass.png);
+	color: #1daaec;
+}
+.item-order-number{
+	padding:0 14px 0 22px;
+	flex: 1;
+}
+.item-time{
+	margin-right: 30px;
+}
+/*下拉,上滑加载样式*/
+.mui-pull-top-tips {
+	position: absolute;
+	top: -20px;
+	left: 50%;
+	margin-left: -25px;
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	z-index: 999;
+}
+.mui-bar~.mui-pull-top-tips {
+	top: 24px;
+}
+.mui-pull-top-wrapper {
+	width: 42px;
+	height: 42px;
+	display: block;
+	text-align: center;
+	background-color: #efeff4;
+	border: 1px solid #ddd;
+	border-radius: 25px;
+	background-clip: padding-box;
+	box-shadow: 0 4px 10px #bbb;
+	/*overflow: hidden;*/
+}
+.mui-pull-top-tips.mui-transitioning {
+	-webkit-transition-duration: 200ms;
+	transition-duration: 200ms;
+}
+.mui-pull-top-tips .mui-pull-loading {
+	/*-webkit-backface-visibility: hidden;
+	-webkit-transition-duration: 400ms;
+	transition-duration: 400ms;*/
+	
+	margin: 0;
+}
+.mui-pull-top-wrapper .mui-icon,
+.mui-pull-top-wrapper .mui-spinner {
+	margin-top: 7px;
+}
+.mui-pull-top-wrapper .mui-icon.mui-reverse {
+	/*-webkit-transform: rotate(180deg) translateZ(0);*/
+}
+.mui-pull-bottom-tips {
+	text-align: center;
+	background-color: #efeff4;
+	font-size: 15px;
+	line-height: 40px;
+	color: #777;
+	display: none;
+}
+.mui-pull-top-canvas {
+	overflow: hidden;
+	background-color: #fafafa;
+	border-radius: 40px;
+	box-shadow: 0 4px 10px #bbb;
+	width: 40px;
+	height: 40px;
+	margin: 0 auto;
+}
+.mui-pull-top-canvas canvas {
+	width: 40px;
+}
+
+.empty-show{position: fixed; z-index: 2; top: 50%; left: 0; width: 100%; padding: 0 20px; text-align: center; transform: translateY(-50%); -webkit-transform:translateY(-50%) ; color: #a2a2a2; font-size: 16px;}
+.empty-show button{padding: 10px 30px; margin-top: 15px;}
+.empty-show h4{margin: 0;line-height: 30px;font-size: 16px; margin-bottom: 10px;}

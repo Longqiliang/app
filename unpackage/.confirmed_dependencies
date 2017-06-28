@@ -1,0 +1,458 @@
+{
+  "index.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "list.html",
+      "html/login.html",
+      "html/main.html",
+      "fonts/tabfont.js",
+      "html/task.html",
+      "html/mine.html",
+      "html/application.html",
+      "dest/fonts/tabfont.js",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/app.min.js",
+      "js/update.js",
+      "dest/js/update.min.js"
+    ],
+    "refer": [
+      "html/push.html",
+      "html/login.html",
+      "html/main.html",
+      "html/task.html",
+      "html/mine.html",
+      "html/application.html",
+      "html/message.html"
+    ]
+  },
+  "html/push.html": {
+    "resources": [
+      "js/common.js",
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/update.js"
+    ],
+    "refer": []
+  },
+  "list.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "html/push.html",
+      "html/guide.html"
+    ]
+  },
+  "html/login.html": {
+    "resources": [
+      "js/app.js",
+      "css/login.css",
+      "img/user-photo.png",
+      "img/login-bg1.png",
+      "img/applogo.png",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "fonts/mui.ttf",
+      "test.json",
+      "dest/img/applogo.png",
+      "dest/js/app.min.js",
+      "dest/css/login.min.css",
+      "dest/img/login-bg1.png",
+      "dest/fonts/mui.ttf",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js"
+    ],
+    "refer": [
+      "html/main.html"
+    ]
+  },
+  "html/guide.html": {
+    "refer": [
+      "html/login.html"
+    ],
+    "resources": []
+  },
+  "html/main.html": {
+    "resources": [
+      "js/vue.js",
+      "img/10097.png",
+      "img/10057.png",
+      "img/10052.png",
+      "img/10056.png",
+      "img/10051.png",
+      "img/10098.png",
+      "img/10058.png",
+      "img/10054.png",
+      "img/10099.png",
+      "test.json",
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/mui.js",
+      "fonts/tabfont.js"
+    ],
+    "refer": [
+      "html/push.html"
+    ]
+  },
+  "html/mine.html": {
+    "resources": [
+      "fonts/iconfont.js",
+      "img/mine-banner.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/mine.css",
+      "html/setting.html",
+      "js/createView.js",
+      "dest/img/mine-banner.png",
+      "dest/fonts/mui.ttf",
+      "dest/css/mine.min.css",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/fonts/iconfont.js",
+      "js/update.js",
+      "dest/js/update.min.js"
+    ],
+    "refer": [
+      "html/setting.html",
+      "html/login.html"
+    ]
+  },
+  "html/application.html": {
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "test.json",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js"
+    ],
+    "refer": []
+  },
+  "html/task.html": {
+    "resources": [
+      "css/mui.min.css",
+      "img/task_pending.png",
+      "img/order.png",
+      "img/task_finish.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/task.css",
+      "test.json",
+      "js/zepto.min.js",
+      "js/underscore-min.js",
+      "js/underscore.js",
+      "html/underscore-min.js",
+      "img/app.png",
+      "img/approve_nopass.png",
+      "js/creatViewTitle.js",
+      "js/mui.pullToRefresh.js",
+      "js/mui.pullToRefresh.material.js",
+      "js/createView.js",
+      "dest/css/task.min.css",
+      "dest/img/task_finish.png",
+      "dest/img/task_pending.png",
+      "dest/js/mui.pullToRefresh.material.min.js",
+      "dest/js/mui.pullToRefresh.min.js",
+      "dest/img/order.png",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/js/underscore.min.js",
+      "dest/fonts/mui.ttf"
+    ],
+    "refer": [
+      "html/task-pending.html",
+      "html/task-finish.html",
+      "html/task-order.html"
+    ]
+  },
+  "html/task-pending.html": {
+    "resources": [
+      "img/no_pass.png",
+      "img/pull-right.png",
+      "img/pass.png",
+      "img/person.png",
+      "css/task-manage.css",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/underscore.js",
+      "js/zepto.min.js",
+      "js/mui.pullToRefresh.js",
+      "js/mui.pullToRefresh.material.js",
+      "js/creatViewTitle.js",
+      "js/createView.js",
+      "css/task.css",
+      "dest/img/pull-right.png",
+      "dest/img/person.png",
+      "dest/css/mui.min.css",
+      "dest/css/task.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/js/mui.pullToRefresh.min.js",
+      "dest/js/mui.pullToRefresh.material.min.js",
+      "dest/js/underscore.min.js"
+    ],
+    "refer": [
+      "html/task-order.html",
+      "html/task-approve.html",
+      "html/task-finish.html",
+      "html/task-approved.html"
+    ]
+  },
+  "html/task-order.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "img/pass_white.png",
+      "css/task-order.css",
+      "img/nopass_white.png",
+      "js/creatViewTitle.js",
+      "js/createView.js",
+      "js/underscore.js",
+      "dest/fonts/mui.ttf",
+      "dest/css/mui.min.css",
+      "dest/css/task-order.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/js/underscore.min.js"
+    ],
+    "refer": [
+      "html/task-order-detail.html"
+    ]
+  },
+  "html/task-finish.html": {
+    "resources": [
+      "img/pull-right.png",
+      "css/task-manage.css",
+      "img/person.png",
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "img/no_pass.png",
+      "img/pass.png",
+      "js/creatViewTitle.js",
+      "js/createView.js",
+      "js/mui.pullToRefresh.js",
+      "js/mui.pullToRefresh.material.js",
+      "js/underscore.js",
+      "js/zepto.min.js",
+      "css/task.css",
+      "dest/img/pull-right.png",
+      "dest/img/pass.png",
+      "dest/img/person.png",
+      "dest/css/task.min.css",
+      "dest/img/no_pass.png",
+      "dest/js/mui.pullToRefresh.material.min.js",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/js/mui.pullToRefresh.min.js",
+      "dest/js/underscore.min.js"
+    ],
+    "refer": [
+      "html/task-order.html"
+    ]
+  },
+  "html/setting.html": {
+    "resources": [
+      "css/setting.css",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/dialog.js",
+      "js/zepto.min.js",
+      "dest/js/zepto.min.js",
+      "dest/css/setting.min.css",
+      "dest/js/dialog.min.js",
+      "dest/fonts/mui.ttf",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js"
+    ],
+    "refer": [
+      "html/setting-message.html",
+      "html/setting-about.html",
+      "html/setting-feedback.html",
+      "html/login.html"
+    ]
+  },
+  "html/setting-about.html": {
+    "resources": [
+      "img/back_icon.png",
+      "css/setting-about.css",
+      "img/applogo.png",
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "dest/img/back_icon.png",
+      "dest/css/setting-about.min.css",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/img/applogo.png"
+    ],
+    "refer": []
+  },
+  "html/setting-feedback.html": {
+    "resources": [
+      "img/back_icon.png",
+      "css/setting-about.css",
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "dest/css/mui.min.css",
+      "dest/css/setting-about.min.css",
+      "dest/js/mui.min.js"
+    ],
+    "refer": []
+  },
+  "html/setting-message.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/setting.css",
+      "dest/css/mui.min.css",
+      "dest/css/setting.min.css",
+      "dest/js/mui.min.js"
+    ],
+    "refer": []
+  },
+  "html/task-approved.html": {
+    "resources": [
+      "css/task-order.css",
+      "js/creatViewTitle.js",
+      "js/createView.js",
+      "js/underscore.js",
+      "js/mui.min.js",
+      "js/zepto.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "dest/css/task-order.min.css",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/js/underscore.min.js"
+    ],
+    "refer": [
+      "html/task-order-detail.html",
+      "html/task-pass.html",
+      "html/task-nopass.html"
+    ]
+  },
+  "html/message.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "js/underscore.js",
+      "css/message.css",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "fonts/tabfont.js",
+      "js/zepto.min.js",
+      "test.json",
+      "js/creatViewTitle.js",
+      "js/createView.js",
+      "dest/css/message.min.css",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/createView.min.js",
+      "dest/js/underscore.min.js",
+      "dest/fonts/mui.ttf"
+    ],
+    "refer": [
+      "html/message-order.html",
+      "html/login.html"
+    ]
+  },
+  "html/task-order-detail.html": {
+    "resources": [
+      "js/creatViewTitle.js",
+      "js/underscore.js",
+      "css/task-order.css",
+      "js/mui.min.js",
+      "js/zepto.min.js",
+      "css/mui.min.css",
+      "dest/css/mui.min.css",
+      "dest/css/task-order.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/underscore.min.js"
+    ],
+    "refer": []
+  },
+  "html/task-pass.html": {
+    "resources": [
+      "img/pass_white.png",
+      "js/underscore.js",
+      "css/task-order.css",
+      "js/mui.min.js",
+      "js/zepto.min.js",
+      "css/mui.min.css",
+      "dest/img/pass_white.png",
+      "dest/css/mui.min.css",
+      "dest/css/task-order.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/underscore.min.js",
+      "dest/js/createView.min.js"
+    ],
+    "refer": [
+      "html/task-order.html"
+    ]
+  },
+  "html/message-order.html": {
+    "resources": [
+      "message-order.json",
+      "js/underscore.js",
+      "js/mui.min.js",
+      "css/message.css",
+      "css/mui.min.css",
+      "fonts/mui.ttf",
+      "js/creatViewTitle.js",
+      "js/createView.js",
+      "dest/css/mui.min.css",
+      "dest/css/message.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/underscore.min.js",
+      "dest/js/createView.min.js",
+      "dest/fonts/mui.ttf"
+    ],
+    "refer": [
+      "html/message-order-detail.html"
+    ]
+  },
+  "html/task-nopass.html": {
+    "resources": [
+      "img/nopass_white.png",
+      "js/underscore.js",
+      "css/task-order.css",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "dest/img/nopass_white.png",
+      "dest/css/mui.min.css",
+      "dest/css/task-order.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/underscore.min.js",
+      "dest/js/createView.min.js"
+    ],
+    "refer": [
+      "html/task-order.html"
+    ]
+  },
+  "html/message-order-detail.html": {
+    "resources": [
+      "css/task-order.css",
+      "js/underscore.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "test.json",
+      "dest/css/task-order.min.css",
+      "dest/css/mui.min.css",
+      "dest/js/mui.min.js",
+      "dest/js/underscore.min.js"
+    ],
+    "refer": []
+  }
+}

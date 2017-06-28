@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>待处理任务明细</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task-order.min.css"/>
+	</head>
+
+	<body>
+		<div class="mui-content content-h-footet">
+			<div id="cotent-header"></div>
+		    <div id="journalize"></div>   
+		</div>
+	    <footer class="order-foot" id="bottomx">
+        	<a href="javascript:void(0)" id="task-pass" data-href="task-pass.html"><button type="button" class="mui-btn mui-btn-green">通过</button></a>
+        	<a href="javascript:void(0)" id="task-nopass" data-href="task-nopass.html"><button type="button" class="mui-btn mui-btn-red" >不通过</button></a>
+	    </footer>
+	    <template id="journalize-tpl">
+			<h3 class="order-tit">
+				分录({%=data_detail.length%}行)-
+				{%_.each(_.sortBy(columns_detail_compact,'display_index'),function(item,index){%}
+				    {%if(item.visible){%}
+				        {%if(index==columns_detail_compact.length-1){%}
+						    {%=item.display_name%}
+					    {%}else{%}
+			                {%=item.display_name%},
+			            {%}%}   
+				    {%}%}
+		        {%})%}
+			</h3>
+		    <ul class="mui-table-view">
+		    {%_.each(data_detail,function(item,t){%}
+		        <li class="mui-table-view-cell">
+		        	<a class="mui-navigate-right" data-index="{%=t%}">
+		        	{%_.each(_.sortBy(columns_detail_compact,'display_index'),function(i,index){%}
+			        	{%if(i.visible){%}
+				        	{%if(index==columns_detail_compact.length-1){%}
+				        	    {%=item[i.display_name]%}
+				        	{%}else{%}
+				        	    {%=item[i.display_name]%},
+				        	{%}%}
+			        	{%}%}
+			        {%})%} 
+		        	</a>
+		        </li>    
+		    {%})%}
+	        </ul>
+		</template>
+		<template id="header-tpl">
+			<h2 class="order-tit">供应商付款申请</h2>
+			<ul class="order-detail">		
+		        {%_.each(_.sortBy(columns_header,'display_index'),function(item){%}
+		            {%if(item.visible){%}
+		        	<li class="order-info">
+		               <span class="order-info-tit">{%=item.display_name%}</span>
+		               {%=data_header[item.column_name]%}  
+		            </li>
+		            {%}%}
+		        {%})%}   
+		    </ul> 
+		</template>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var isShow = false;
+			var headerTpl = document.getElementById("header-tpl");
+			var header = document.getElementById("cotent-header");
+			var journalizeTpl = document.getElementById("journalize-tpl");
+			var journalize=  document.getElementById("journalize");
+			var res,flow,txtId,docId,flowType;	
+			mui.plusReady(function(){
+				var _self = plus.webview.currentWebview();
+				docId = _self.docId;
+				flowType = _self.flowType;
+				flow = _self.flow;
+				txtId= _self.txtId;
+				var w = plus.nativeUI.showWaiting();
+				mui.ajax(URL+"/api/VF/GetVFlowDataByDocID",{
+					data:{
+						"doc_id":docId,
+						"flow_type":flowType,
+						"token":token
+					},
+					dataType:'json',
+					type:'POST',
+					headers:{'Content-Type':'application/json'},
+					success:function(result){
+						var isSuccess = result.success;
+						var code = result.code;
+		            	if(isSuccess==true){
+                            w.close();
+                            res = result;
+	            			var headerHtml  = _.template(headerTpl.innerHTML);
+	            			var journalizeHtml  = _.template(journalizeTpl.innerHTML);
+	            			header.innerHTML = headerHtml(result);
+	            			journalize.innerHTML = journalizeHtml(result);
+	            			isShow = true;	
+		            	}else{
+		            		w.close();
+		            		if(code == "3"){
+		            			againData();
+		            		};
+		            	}	
+					},error:function(){
+						console.log("error");
+						w.close();
+						reloadWvLoad();
+					}
+			    });	
+            });	
+		    mui("#bottomx").on('tap','a',function(){
+	    	    if(!res){
+					return;
+				} 
+//		    	    return;
+		    	var self = this;
+		    	var selfUrl  = self.getAttribute("data-href").trim();
+		    	var selfId = self.getAttribute("id").trim();
+		    	var columnsHeader = res.columns_header;
+    			var dataHeader = res.data_header;
+		    	var data = {
+		    		result:{
+		    			columns_header:columnsHeader,
+		    			data_header:dataHeader,
+		    			flow_type:flowType,
+		    			doc_id:docId,
+		    			flow:flow,
+		    			txtId:txtId
+		    		}
+		    	};
+		    	var nview = mui.createHeadView({
+		    		viewId:selfId,
+					backgroundColor: '#293948',
+					borderColor:'#293948',
+					titleColor:'#ffffff',
+					title: '审批意见',
+					fontSize:'18px',
+					rightIcon:false,
+					textAlign:'left'
+				});
+            	openView({
+            		url:selfUrl,
+            		id:selfId,
+            		load:true
+            	},{},data,nview);
+		    });
+			mui("#journalize").on('tap','a',function(){
+				if(!res){
+					return;
+				}
+//					return;	 
+				var self = this;
+				var docIndex =  self.getAttribute("data-index").trim();
+				    docIndex = parseInt(docIndex);
+				var docDetail = res.columns_detail;
+				var docInfo = res.data_detail[docIndex];
+				var data ={
+					result:{
+						columns_detail:docDetail,
+					    docInfo:docInfo
+					}	
+				}
+				var nview = mui.createHeadView({
+					viewId:'task-order-detail',
+					backgroundColor: '#293948',
+					borderColor:'#293948',
+					titleColor:'#fffff',
+					title: '任务明细',
+					fontSize:'18px',
+					rightIcon:false,
+					textAlign:'left'
+				});
+				openView({
+					url:'task-order-detail.html',
+					id:'task-order-detail',
+					load:true
+				},{},data,nview);
+			});				
+		</script>
+	</body>
+
+</html>

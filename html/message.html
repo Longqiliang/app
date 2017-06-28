@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>消息预警</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet"  href="../dest/css/message.min.css"/>
+	</head>
+	<body>
+		<div class="mui-content" id="message"></div>
+		<template id="message-tpl">
+			<ul class="mui-table-view" >
+			    {%_.each(items,function(i){%}
+			    	<li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" data-id="{%=i.templete_id%}" data-name="{%=i.templete_name%}">
+		                	{%=i.templete_name%}({%=i.count%})
+		                </a>
+		            </li>
+			    {%})%}
+	        </ul>
+		</template>
+		<script src="html5plus://ready"></script>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script type="text/javascript">
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var back__first = null;
+			var res = null;
+			var _self,timer;
+			var messageTpl = document.getElementById("message-tpl");
+			var message = document.getElementById("message");
+			mui.init();
+            if(window.plus){
+            	plusReady();
+            }else{
+            	document.addEventListener('plusready',plusReady,false);
+            }
+			function plusReady(){
+				 _self =  plus.webview.currentWebview();
+				 if(URL.length==0){
+				 	openView({
+						url:"login.html",
+						id:"login"
+					});
+				 	return;
+				 }
+     			getData();
+				_self.setPullToRefresh({
+					support: true,
+					height: '60px',
+					range: '100px',
+					style: 'circle',
+					offset: '1px'
+				}, pulldownRefresh);
+
+				mui("#message").on('tap','li a',function(e){
+					if(!res){
+	                	return;
+	                }
+			    	var self = this;
+			    	var text = self.innerText.trim();
+			    	var templeteId = self.getAttribute("data-id");
+			    	var templeteName = self.getAttribute("data-name");
+			    	var selfUrl = 'message-order.html';
+			    	var selfId = 'message-order';
+			    	var nview = mui.createHeadView({
+						viewId:selfId,
+						backgroundColor: '#293948',
+						borderColor:'#293948',
+						titleColor:'#ffffff',
+						title: text,
+						fontSize:'18px',
+						textAlign:'left'
+					});
+					openView({
+						url:selfUrl,
+						id:selfId
+					},{},{
+						templeteId:templeteId,
+						templeteName:templeteName
+					},nview);
+				},false);
+            }
+		    mui.back = function(){
+		    	if (!back__first) {
+					back__first = new Date().getTime();
+					mui.toast('再按一次退出应用');
+					setTimeout(function() {
+						back__first = null;
+					}, 2000);
+				} else {
+					if (new Date().getTime() - back__first < 2000) {
+						plus.runtime.quit();
+					}
+				}
+		    };
+            //数据获取
+		    function getData(){
+				mui.ajax(URL+'/api/NotificationMessage/GetLevel1',{
+					type:'POST',
+					data:{"token": token},
+					dataType:'json',
+					timeout:6000,
+		            headers:{'Content-Type':'application/json'},
+					success:function(e){
+						var isSuccess = e.success;
+						var code = e.code;
+						if(isSuccess){
+							res = e;
+							var messageHtml = _.template(messageTpl.innerHTML);
+							message.innerHTML=messageHtml(e);
+							plus.navigator.closeSplashscreen();
+							timer =setTimeout(getData,60000);
+						}else{							                            
+							if(code == "3"){
+		            			againData();
+		            		}
+						}	
+					},error:function(){
+						reloadWvLoad();
+					}
+				});
+			}
+//		     下拉刷新
+		    function  pulldownRefresh(){
+		    	setTimeout(function() {
+		    		clearTimeout(timer);
+					getData();
+					_self.endPullToRefresh();
+				}, 1500);
+		    }
+		</script>
+	</body>
+</html>

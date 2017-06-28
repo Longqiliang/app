@@ -1,0 +1,17 @@
+{
+    "appid":"H5FAFA68F",
+    "iOS":{
+    	"version":"1.2.0",
+    	"title":"飞天兔+(1.0.0)版本",
+    	"note":"测试版本1.1.0",
+    	"url":"",
+    	"size":""
+    },
+    "Android":{
+    	"version":"1.3.0",
+    	"title":"飞天兔+(1.3.0)版本",
+    	"note":"测试版本1.3.0",
+    	"url":"http://11wangjp.oss-cn-shanghai.aliyuncs.com/ftt.apk",
+    	"size":"3.9M"
+    }
+}

@@ -1,0 +1,89 @@
+/*body{
+	min-height: 100vh;
+}*/
+.icon{
+   width: 1em; height: 1em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+   font-size: 24px;
+   color: #90A6B2;
+}
+.mui-table-view-cell .icon{
+	/*margin: -1px 6px -2px 8px;*/
+	font-size: 26px;
+	/*font-size: 24px;
+	margin: 0 6px 0 8px;*/
+}
+.mui-table-view-cell:after{
+	left: 0;
+}
+.mine-banner img{
+	width: 100%;
+	vertical-align: middle;
+}
+.mine-banner:after{
+	height: 0;
+	display: block;
+	content: '';
+}
+.mine-info{
+	position: relative;
+	background-color: #fff;
+	padding-top: 35px ;
+}
+.mine-info h2{
+	text-align: center;
+	margin: 0;
+	font-size: 20px;
+	line-height: 26px;
+}
+.mine-info p{
+	text-align: center;
+	color: #90A6B2;
+	font-size: 18px;
+	line-height: 26px;
+	margin: 0;
+}
+.mine-activity{
+	color: #90A6B2;
+	padding: 1% 5%;
+}
+.mine-activity .icon{
+	font-size: 26px;
+}
+.mine-activity .icon~.mui-tab-label{
+	font-size: 14px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #90A6B2;
+}
+.mui-table-view{
+	margin-top: 3%;
+}
+.mine-logo{
+	width: 60px;
+	height: 60px;
+	background: orange;
+	border-radius:100% ;
+	text-align: center;
+	font-size: 28px;				
+	font-family: "Microsoft Yahei";
+	color: white;
+	line-height: 60px;
+	position: absolute;
+	top: -30px;
+	left: 50%;
+	margin-left: -30px;
+	z-index: 999;
+}
+.mine-view-icon{
+	position: absolute;
+	-webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    top: 50%;
+}
+.mine-view-info{
+	padding-left: 28px;
+}

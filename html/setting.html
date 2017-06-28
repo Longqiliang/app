@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>设置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet"  href="../dest/css/mui.min.css"/>
+		<link rel="stylesheet"  href="../dest/css/setting.min.css"/>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">设置</h1>
+		</header>	
+		<div class="mui-content">
+			<ul class="mui-table-view" id="setting-list">
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right" data-href="setting-message.html" data-id="setting-message">
+		                新消息通知
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right" data-id="cleanCache">
+		                 清除缓存
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right" data-href="setting-about.html" data-id="setting-about">
+		                关于
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell"> 
+		        	<a  class="mui-navigate-right" data-href="setting-feedback.html" data-id="setting-feedback">
+		        		意见反馈
+		        	</a>
+		        </li>
+		    </ul>
+		    <div class="edit-padded">
+		    	<button class="mui-btn mui-btn-blue mui-btn-block" id="exit">退出登录</button>
+		    </div> 
+		    <!--<div class="m-black-dialog">
+			    <div class="m-confirm">
+			    	<div class="confirm-hd">
+			    		<strong class="confirm-tit">确定要清除缓存？</strong>
+			    	</div>
+			    	<div class="confirm-bd">
+			    		预计清除4.09M图片与0kb文档
+			    	</div>
+			    	<div class="confirm-ft green">
+			    		<a href="javascript:;">取消</a>
+			    		<a href="javascript:;">确定</a>
+			    	</div>
+			    </div>
+		    </div>-->
+		    
+		</div>
+	   
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/zepto.min.js"></script>
+		<script src="../dest/js/dialog.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script type="text/javascript">
+			var aniShow = "pop-in";
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+				
+			});
+			var exit = document.getElementById("exit");
+			exit.addEventListener('tap',function(){
+				if (mui.os.ios) {
+				    localStorage.removeItem('$state');
+					mui.openWindow({
+						url: 'login.html',
+						id: 'login',
+						show: {
+							aniShow: 'pop-in'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+					return;
+				}
+				var btnArray = [{
+					title: "注销当前账号"
+				}, {
+					title: "直接关闭应用"
+				}];
+				plus.nativeUI.actionSheet({
+					cancel: "取消",
+					buttons: btnArray
+				}, function(event) {
+					var index = event.index;
+					switch (index) {
+						case 1:
+							localStorage.removeItem('$state');
+							openView({
+								url:'login.html',
+								id:'login'
+							});	
+							break;
+						case 2:
+							plus.runtime.quit();
+							break;
+					}
+				});
+			},false);
+			//只有ios支持的功能需要在Android平台隐藏；
+			if(mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if(list) {
+					for(var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version) < 4.4) {
+					aniShow = "slide-in-right";
+				}
+			}
+			mui.plusReady(function(){
+				mui('#setting-list').on('tap','a',function(){				
+				var self = this;
+				var selfUrl  = self.getAttribute("data-href");
+				var id = self.getAttribute("data-id");
+				if(selfUrl){
+					//非plus环境，直接走href跳转
+					if(!mui.os.plus){
+						location.href = href;
+						return;
+					}
+					openView({
+						url:selfUrl,
+						id:id
+					})
+				}else{
+					if(id=='cleanCache'){
+						plus.cache.calculate( function ( size ) {
+							console.log( "Application cache size: " + size + " byte!" );
+						});
+						confirm('settingConfirm','确定要清除缓存？', '预计清除4.98M图片缓存和0B文档缓存！',function(){
+							console.log("sss");
+						});
+					}					
+					return;
+				}
+			});
+			})
+			
+		    
+		</script>
+		
+	</body>
+</html>

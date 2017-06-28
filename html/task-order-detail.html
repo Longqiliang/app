@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>分录明细</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task-order.min.css"/>
+	</head>
+
+	<body>
+	    <div class="mui-content">
+	        <h2 class="order-tit">分录明细</h2>
+	        <div id="journalizing-detail"></div>
+	    </div>
+		<template id="journalizing-detail-tpl">	
+	        <ul class="order-detail order-tab-view">
+        		{%_.each(columns_detail,function(item){%}
+    			<li class="order-info">
+	        		<span class="order-info-tit">{%=item.display_name%}</span>
+	        		{%=docInfo[item.column_name]%}
+	        	</li>
+        		{%})%}	
+	        </ul>
+		</template>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script type="text/javascript">
+			var _self;
+			mui.init();
+			var detailTpl = document.getElementById("journalizing-detail-tpl");
+			var detail = document.getElementById("journalizing-detail");
+			mui.plusReady(function(){
+				_self = plus.webview.currentWebview();
+				var result = _self.result;
+				var detailHtml = _.template(detailTpl.innerHTML);
+				detail.innerHTML=detailHtml(result);
+			});   
+		</script>
+		
+	</body>
+
+</html>

@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+	</head>
+    <style>
+    	#close{
+    		position: absolute;
+			width: 160px;
+			left: 50%;
+			margin-left: -80px;
+			bottom: 15%;
+			padding: 10px;
+			color: #fff;
+			border-color: #fff;   		
+    	}
+    	.item-logo{
+    		position: relative;
+    		width: 100%;
+    		height: 100%;
+    	}
+    	.item-logo.first-bgcor{
+    		background: #D74B28;
+    	}
+    	.item-logo.second-bgcor{
+    		background: #02C1ED;
+    	}
+    	.item-logo.third-bgcor{
+    		background: #67C962;
+    	}
+    	.item-logo a{
+    		position: absolute;
+    		width: 200px;
+    		height: 200px;
+    		top:15%;
+    		left: 50%;
+    		margin-left: -100px;
+    		border: 1px solid #FFFFFF;
+    		border-radius:50%;
+    		line-height: 200px;
+    		text-align: center;
+    		font-size: 40px;
+    		color: #fff;
+    		border-color: rgba(255,255,255,.5);
+    	}
+    	.animate {
+				position: absolute;
+				left: 0;
+				bottom: 15%;
+				width: 100%;
+				color: #fff;
+			}
+		.animate h2 {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+		.animate li {
+			width: 50%;
+			height: 30px;
+			line-height: 30px;
+			list-style: none;
+			font-size: 16px;
+			text-align: right;
+			overflow: hidden;
+		}
+		.animate li:nth-child(3) {
+			text-align: left;
+			float: right;
+		}
+		.animated{
+			
+		}
+		.animate .translate-left{
+			-webkit-animation:translateLeft 1s running ;
+		}
+		.animate .translate-right{
+			-webkit-animation: translateRight 1s running .5s;
+		}
+		.animate .translate-up{
+			-webkit-animation: translateUp 1s running;
+		}
+		.animate .translate-down{
+			-webkit-animation: translateDown 1s running 1s;
+			
+		}
+		@-webkit-keyframes translateDown{
+			0%, 60%, 75%, 90%, 100% {
+				-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+				animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+			}
+			0%{
+				opacity: 0;
+				-webkit-transform: translate3d(0,-3000px,0);
+				transform: translate3d(0,-3000px,0);
+			}
+			60%{
+				opacity: 1;
+				-webkit-transform: translate3d(0,25px,0);
+				transform: translate3d(0,25px,0);
+			}
+			75%{
+				-webkit-transform: translate3d(0,-10px,0);
+				transform: translate3d(0,-10px,0);
+			}
+			90%{
+				-webkit-transform: translate3d(0,5px,0);
+				transform: translate3d(0,5px,0);
+			}
+			100%{
+				-webkit-transform: none;
+				transform: none;
+			}	
+		}
+		@-webkit-keyframes translateRight{
+			0%, 60%, 75%, 90%, 100% {
+				-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+				animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+			}
+			0%{
+				opacity: 0;
+				-webkit-transform: translate3d(3000px,0,0);
+				transform: translate3d(3000px,0,0);
+			}
+			60%{
+				opacity: 1;
+				-webkit-transform: translate3d(-25px,0,0);
+				transform: translate3d(-25px,0,0);
+			}
+			75%{
+				-webkit-transform: translate3d(10px,0,0);
+				transform: translate3d(10px,0,0);
+			}
+			90%{
+				-webkit-transform: translate3d(-5px,0,0);
+				transform: translate3d(-5px,0,0);
+			}
+			100%{
+				-webkit-transform: none;
+				transform: none;
+			}	
+		}
+		@-webkit-keyframes translateUp{
+			0%, 60%, 75%, 90%, 100% {
+				-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+				animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+			}
+			0%{
+				opacity: 0;
+				-webkit-transform: translate3d(-3000px,0,0);
+				transform: translate3d(-3000px,0,0);
+			}
+			60%{
+				opacity: 1;
+				-webkit-transform: translate3d(25px,0,0);
+				transform: translate3d(25px,0,0);
+			}
+			75%{
+				-webkit-transform: translate3d(-10px,0,0);
+				transform: translate3d(-10px,0,0);
+			}
+			90%{
+				-webkit-transform: translate3d(5px,0,0);
+				transform: translate3d(5px,0,0);
+			}
+			100%{
+				-webkit-transform: none;
+				transform: none;
+			}	
+		}
+		@-webkit-keyframes translateLeft{
+			0%, 60%, 75%, 90%, 100% {
+				-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+				animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+			}
+			0%{
+				opacity: 0;
+				-webkit-transform: translate3d(-3000px,0,0);
+				transform: translate3d(-3000px,0,0);
+			}
+			60%{
+				opacity: 1;
+				-webkit-transform: translate3d(25px,0,0);
+				transform: translate3d(25px,0,0);
+			}
+			75%{
+				-webkit-transform: translate3d(-10px,0,0);
+				transform: translate3d(-10px,0,0);
+			}
+			90%{
+				-webkit-transform: translate3d(5px,0,0);
+				transform: translate3d(5px,0,0);
+			}
+			100%{
+				-webkit-transform: none;
+				transform: none;
+			}	
+		}	
+    </style>
+	<body>		
+		<div class="mui-slider mui-fullscreen">
+			<div class="mui-slider-group">
+				<!--第一个内容区容器-->
+				<div class="mui-slider-item">
+				  <!-- 具体内容 -->
+				    <div class="item-logo first-bgcor">
+				    	<a href="javascript:viod(0)">
+				    		U6 APP
+				    	</a>
+				    	<div class="animate guide-show">
+				    		<h2 class="animated translate-down">测试内容是的是的所是多少是是</h2>
+				    		<li class="animated translate-left">测试内容是的是的所是多少是是</li>
+				    		<li class="animated translate-right">测试内容是的是的所是多少是是</li>
+				    	</div>
+				    </div>
+				</div>
+				<!--第二个内容区-->
+				<div class="mui-slider-item">
+				  <!-- 具体内容 -->
+				    <div class="item-logo second-bgcor">
+				    	<a href="javascript:viod(0)">
+				    		U6 APP
+				    	</a>
+				    	<div class="animate guide-show">
+				    		<h2>测试内容是的是的所是多少是是</h2>
+				    		<li class="animated">是多少</li>
+				    		<li class="animated">是的是的无群</li>
+				    	</div>
+				    </div>
+				</div> 
+				<!--第三个内容区-->
+				<div class="mui-slider-item">
+				  <!-- 具体内容 -->
+				    <div class="item-logo third-bgcor">
+				    	<a href="javascript:viod(0)">
+				    		U6 APP
+				    	</a>
+				    	<div class="animate guide-show">
+				    		<button id="close" class="mui-btn mui-btn-green mui-btn-outlined">立即体验</button>
+				    	</div>
+				    </div>
+				</div> 
+			</div>
+			<div class="mui-slider-indicator">
+				<div class="mui-indicator mui-active"></div>
+	            <div class="mui-indicator"></div>
+	            <div class="mui-indicator"></div>
+	        </div>
+		</div>
+		<script src="../dest/js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+            mui.back = function(){};
+			mui.plusReady(function() {
+				if(mui.os.ios){
+					plus.navigator.setFullscreen(true);
+				}
+				plus.navigator.closeSplashscreen();	
+				var login = mui.preload({
+				url:'login.html',
+				id:'login'
+			   });
+				var close = document.getElementById('close');
+			close.addEventListener('tap',function(e){
+				plus.storage.setItem('guide','true');
+				plus.navigator.setFullscreen(false);
+				plus.webview.currentWebview().close();
+				console.log(login);
+			},false);
+			});
+			
+			
+		</script>
+	</body>
+
+</html>

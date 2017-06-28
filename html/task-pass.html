@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>审批意见处理(通过)</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task-order.min.css"/>
+		<style type="text/css">
+			body{
+				background-color: #fff !important;
+			}
+			.mui-content{
+				background-color: #FFFFFF !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content content-h-footet">
+		    <div id="cotent-header">
+		    </div>
+		    <div class="opinion-write">
+		    	<h3 class="order-tit"><span class="order-icon order-icon-pass">通过</span></h3>
+		        <form class="mui-input-group" >    
+	                <textarea  placeholder="请在此处填写你的意见" rows="5" id="opinion-txt" autofocus="autofocus"></textarea>   
+		        </form>
+		    </div>            
+		</div>
+		<footer class="order-foot" id="bottomx">
+        	<a href="javascript:void(0)" id="sub"><button type="button" class="mui-btn mui-btn-green">确定</button></a>
+        	<a href="javascript:void(0)" id="back"><button type="button" class="mui-btn mui-btn-red">取消</button></a>	
+	    </footer>
+	    <template id="header-tpl">
+			<h2 class="order-tit">供应商付款申请</h2>
+			<ul class="order-detail">		
+		        {%_.each(_.sortBy(columns_header,'display_index'),function(item){%}
+		            {%if(item.visible){%}
+		        	<li class="order-info">
+		               <span class="order-info-tit">{%=item.display_name%}</span>
+		               {%=data_header[item.column_name]%}  
+		            </li>
+		            {%}%}
+		        {%})%}   
+		    </ul> 
+		</template>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var headerTpl = document.getElementById("header-tpl");
+			var header = document.getElementById("cotent-header");
+
+			mui.plusReady(function(){
+				var _self = plus.webview.currentWebview();
+				//设置bottom绝对位置
+                document.getElementById('bottomx').style.top = (plus.display.resolutionHeight - 90) + "px";
+//				var w=plus.nativeUI.showWaiting('',{padlock:true});
+				var result = _self.result;
+				var headerHtml  = _.template(headerTpl.innerHTML);
+                header.innerHTML = headerHtml(result);
+				mui("#bottomx").on('tap','a',function(){
+                	var self = this;
+                	var btnId = self.id;
+                	var txt = document.getElementById("opinion-txt");
+                	txt.blur();
+                	switch(btnId){
+                		case "sub":
+                		var data = {
+                			"flow_type":result.flow_type,
+                			"doc_id":result.doc_id,
+                			"auditing_text_id":result.txtId,
+                			"auditing_text":txt.value,
+                			"check_state":2,
+                			"token":token
+                		};
+                		mui.ajax(URL+'/api/VF/NodeAuditing',{
+                			data:data,
+                			type:'POST',
+                			dataType:'json',
+                			success:function(e){
+                				var isSuccess = e.success;
+                				if(isSuccess){
+                					var pendTask = plus.webview.getWebviewById("task-pending");
+									if(pendTask){
+										mui.fire(pendTask,"updateData",{
+							        		id:result.doc_id
+							        	})
+									}
+                					plus.nativeUI.toast("审批成功");
+	            	                var	base='data:image/png;base64,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';
+                					var nview = mui.createHeadView({
+				                    	viewId:'task-order',
+										backgroundColor: '#293948',
+										borderColor:'#293948',
+										titleColor:'#ffffff',
+										title: '任务明细',
+										fontSize:'18px',
+										rightIcon:true,
+						                rightIconBase:base,
+										textAlign:'left'
+									});
+									_self.opener().close();
+					            	openView({
+					            		url:'task-order.html',
+					            		id:'task-order'
+					            	},{},{docId:result.doc_id,flowType:result.flow_type,flow:result.flow,txtId:result.txtId},nview);	              				               				    
+	                			}else{
+                					plus.nativeUI.toast("审批失败，请重新提交");
+                				}
+                			},error:function(){
+                				plus.nativeUI.toast("网络错误");
+                			}
+                		})
+                		break;
+                		case "back":
+                		mui.back();
+                		break;
+                	}
+                });
+			});	
+			
+		</script>
+	</body>
+</html>

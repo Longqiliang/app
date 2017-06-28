@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<script src="../dest/fonts/iconfont.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../dest/css/mine.min.css"/>
+	</head>
+    
+	<body>
+		<div class="mui-content">
+			<div class="mine-banner">
+				<img src="../dest/img/mine-banner.png" />
+			</div>
+			<div class="mine-info">
+				<div class="mine-logo">
+		    	   菊
+		        </div>
+				<h2 id="mine-name">未登录</h2>
+				<p id="mine-company-name"></p>
+				<div class="mine-activity mui-bar-tab">
+					<a class="mui-tab-item">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-dynamic"></use>
+						</svg>
+						<span class="mui-tab-label">
+							动态
+						</span>
+					</a>
+					<a class="mui-tab-item">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-vigour"></use>
+						</svg>
+						<span class="mui-tab-label">活力</span>
+					</a>
+					<a class="mui-tab-item">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#icon-gift"></use>
+						</svg>
+						<span class="mui-tab-label">勋章</span>
+					</a>
+				</div>
+			</div>
+		    <ul class="mui-table-view" id="list">
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" data-href="setting.html" data-id="setting">
+		                	<span class="mine-view-icon">
+		                		<svg class="icon" aria-hidden="true">
+								    <use xlink:href="#icon-setting"></use>
+								</svg>
+		                	</span>
+		                    <span class="mine-view-info">设置</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	<span class="mine-view-icon">
+		                		<svg class="icon" aria-hidden="true">
+								    <use xlink:href="#icon-help"></use>
+								</svg>
+		                	</span>
+		                    <span class="mine-view-info">帮助</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	<span class="mine-view-icon">
+			                	<svg class="icon" aria-hidden="true">
+								    <use xlink:href="#icon-services"></use>
+								</svg>	
+		                	</span>
+		                    <span class="mine-view-info">在线客服</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" data-id="update">
+		                	<span class="mine-view-icon">
+		                		<svg class="icon" aria-hidden="true">
+								    <use xlink:href="#icon-update"></use>
+								</svg>
+		                	</span>
+		                    <span class="mine-view-info">检查更新</span>
+		                    <span class="mui-pull-right right mui-badge-danger mui-badge-inverted mui-hidden" id="supgrade">New</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	<span class="mine-view-icon">
+		                		<svg class="icon" aria-hidden="true">
+								    <use xlink:href="#icon-cloud"></use>
+								</svg>
+		                	</span>
+		                    <span class="mine-view-info">关于我们</span>
+		                </a>
+		            </li>
+		       </ul>
+		</div>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/update.min.js"></script>
+		<script src="../dest/js/createView.min.js" ></script>
+		<script type="text/javascript">
+			mui.init({
+				preloadPages:[{
+			      url:'setting.html',
+			      id:'setting'
+			    }]
+			});
+			var state = JSON.parse(localStorage.getItem("$state"));
+			var mineName = document.getElementById("mine-name");
+			var minecompany = document.getElementById("mine-company-name");
+			var supgrade = document.getElementById("supgrade");
+			var check_first = 0;
+			var inf;
+			if(state){
+				var companyName = state.companyName;
+				var userName = state.name;
+				if(companyName){
+					minecompany.innerHTML = companyName;
+				}
+				mineName.innerHTML =  userName;
+			}
+			window.addEventListener("update",function(event){
+				inf = event.detail.inf;
+				supgrade.classList.remove("mui-hidden");	
+			})
+			mui.plusReady(function(){
+				mui.initUpdate();
+				mui("#list").on('tap','a',function(){
+					if(check_first == 0){
+						check_first = 1;
+					}else{
+						return;
+					}
+					var self = this;
+					var selfUrl =self.getAttribute("data-href");
+					var selfId = self.getAttribute("data-id");
+					if(selfUrl){
+						openView({
+							url:selfUrl,
+							id:selfId,
+							load:true
+						});	
+					}else{
+						if(selfId == "update"){
+							if(inf){
+								plus.nativeUI.confirm(inf.note,function(i){
+							    var keyUpdate = "updateCheck", //取消升级键名
+		                            keyAbort = "updateAbort";//忽略版本键名
+									switch(i.index){
+										case 0:
+										plus.storage.setItem(keyUpdate, (new Date()).getTime().toString());
+										break;
+										case 1:
+										plus.storage.setItem(keyAbort, inf.version );
+										plus.storage.setItem(keyUpdate, (new Date()).getTime().toString());
+										break;
+										case 2:
+										plus.runtime.openURL(inf.url);
+										break;
+										default:
+										break;
+									}
+						        },inf.title,["取　　消","跳过此版本","立即更新"]);
+							}else{
+								plus.nativeUI.alert("当前已是最新版本",function(){
+									
+								},"版本更新","确定")
+							}
+						}
+					}
+					setTimeout(function () { check_first = 0 }, 500);
+				},false);
+			});
+			var back__first = null;
+			//重写预加载页面back方法
+		    mui.back = function(){
+		    	if (!back__first) {
+					back__first = new Date().getTime();
+					mui.toast('再按一次退出应用');
+					setTimeout(function() {
+						back__first = null;
+					}, 2000);
+				} else {
+					if (new Date().getTime() - back__first < 2000) {
+						plus.runtime.quit();
+					}
+				}
+		    };
+		</script>
+	</body>
+
+</html>

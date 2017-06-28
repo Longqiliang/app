@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			
+		</style>
+	</head>
+
+	<body>
+		
+	    <header class="mui-bar mui-bar-nav">
+	        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	        <h1 class="mui-title">注册</h1>
+	    </header>
+		<div class="mui-content">
+		    
+		</div>
+		<script src="../dest/js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+		</script>
+		<script type="text/template">
+			    var freeDate=['2017-05-21','2017-05-19','2017-05-20','2017-05-22','2017-06-01'];
+            //某一天
+          function nextDate (date) {
+                var now = new Date(date);
+                now.setDate(now.getDate() + 1);
+                var year = now.getFullYear();
+                var month = now.getMonth() + 1;
+                var day = now.getDate();
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (day < 10) {
+                    day = '0' + day;
+                }
+
+                return year + '-' + month + '-' + day;
+            };
+            
+            function sameDate(date, arr) {
+                for(var i=0; i<arr.length; i++) {
+                    if(date==arr[i]) {
+                        date=nextDate(new_date);
+                        sameDate(date);
+                    }
+                }
+                return date;
+            }
+
+            function dateArr(start_day, arr, days) {
+                var new_date=start_day;
+                var newArr=new Array();
+                var a=true;
+                var num=0;
+                for(var i=0; i<days+num; i++) {
+                    //alert(new_date);
+//                    for(var j=0; j<arr.length; j++) {
+//                        if(new_date==arr[j]) {
+//                            new_date=nextDate(new_date);
+//                            a=false;
+//                        }
+//                    }
+                    sameDate(start_day, arr);
+                    newArr.push(start_day);
+                    new_date=nextDate(new_date);
+                }
+                alert(newArr.length);
+                return newArr;
+            }
+        
+            alert(dateArr('2017-05-18', freeDate, 20));
+    
+    console.log(dateArr('2017-05-18', freeDate, 20));
+		</script>
+		<script type="text/javascript">
+			  var freeDate=['2017-05-21','2017-05-22','2017-05-20','2017-05-19','2017-06-01'];
+
+          function nextDate (date) {
+                var now = new Date(date);
+                now.setDate(now.getDate() + 1);
+                var year = now.getFullYear();
+                var month = now.getMonth() + 1;
+                var day = now.getDate();
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (day < 10) {
+                    day = '0' + day;
+                }
+
+                return year + '-' + month + '-' + day;
+           };
+            function dateArr(start_day, arr, days) {
+                var new_date=start_day;
+                var newArr=new Array();
+                var a=true;
+                var num=0;
+                for(var i=0; i<arr.length; i++) {
+                    if(arr[i]==arr[i++]) {
+                        num++;
+                    }
+                }
+                for(var i=0; i<days; i++) {
+                    //alert(new_date);
+                    a=true;
+                    for(var j=0; j<arr.length; j++) {
+                        if(new_date==arr[j]) {
+                        	
+                            new_date=nextDate(new_date);
+                            a=false;
+                        }
+                    }
+                    if(a) {
+                        newArr.push(new_date);
+                        new_date=nextDate(new_date);
+                    }
+                }
+                console.log(newArr.length);
+                return newArr;
+            }
+        
+            console.log(dateArr('2017-05-17', freeDate, 20));
+		</script>
+	</body>
+
+</html>

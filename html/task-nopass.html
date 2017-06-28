@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>审批意见处理(不通过)</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task-order.min.css"/>
+		<style type="text/css">
+			body{
+				background-color: #fff !important;
+			}
+			.mui-content{
+				background-color: #FFFFFF !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content content-h-footet">
+		    <div id="cotent-header">
+		    	<div class="">
+		    		
+		    	</div>
+		    </div>
+		    <div class="opinion-write">
+		    	<h3 class="order-tit"><span class="order-icon order-icon-nopass">不通过</span></h3>
+		        <form class="mui-input-group" >    
+	                <textarea  placeholder="请在此处填写你的意见" rows="5" id="opinion-txt" autofocus="autofocus"></textarea>   
+		        </form>
+		    </div>            
+		</div>
+		<footer class="order-foot" id="bottomx">
+			<a href="javascript:void(0)" id="sub"><button type="button" class="mui-btn mui-btn-green">确定</button></a>
+        	<a href="javascript:void(0)" id="back"><button type="button" class="mui-btn mui-btn-red">取消</button></a>	
+	    </footer>
+	    <template id="header-tpl">
+			<h2 class="order-tit">供应商付款申请</h2>
+			<ul class="order-detail">		
+		        {%_.each(_.sortBy(columns_header,'display_index'),function(item){%}
+		            {%if(item.visible){%}
+		        	<li class="order-info">
+		               <span class="order-info-tit">{%=item.display_name%}</span>
+		               {%=data_header[item.column_name]%}  
+		            </li>
+		            {%}%}
+		        {%})%}   
+		    </ul> 
+		</template>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var headerTpl = document.getElementById("header-tpl");
+			var header = document.getElementById("cotent-header"); 
+			mui.plusReady(function(){
+				var _self = plus.webview.currentWebview();
+				//设置bottom绝对位置
+                document.getElementById('bottomx').style.top = (plus.display.resolutionHeight - 90) + "px";
+				var result = _self.result;
+				var headerHtml  = _.template(headerTpl.innerHTML);
+                header.innerHTML = headerHtml(result);
+                mui("#bottomx").on('tap','a',function(){
+                	var self = this;
+                	var btnId = self.id;
+                	var txt = document.getElementById("opinion-txt");
+                	txt.blur();
+                	switch(btnId){
+                		case "sub":
+                		var data = {
+                			"flow_type":result.flow_type,
+                			"doc_id":result.doc_id,
+                			"auditing_text_id":result.txtId,
+                			"auditing_text":txt.value,
+                			"check_state":3,
+                			"token":token
+                		};
+                		mui.ajax(URL+'/api/VF/NodeAuditing',{
+                			data:data,
+                			type:'POST',
+                			dataType:'json',
+                			success:function(e){
+                				var isSuccess = e.success;
+                				if(isSuccess){
+                					var task = plus.webview.getWebviewById("task");
+                					var pendTask = plus.webview.getWebviewById("task-pending");
+									if(pendTask && task){
+										mui.fire(pendTask,"updateData",{
+							        		id:result.doc_id
+							            });
+							            mui.fire(task,"reloadData");
+									}
+                					plus.nativeUI.toast("审批成功");
+					            	var base='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJwAAABZCAMAAAD8Q714AAAANlBMVEX////lMi3nR0ToWlfqamjseXfth4XvlZPxoaDyrKv0uLf1w8L3zs352Nj64uL87Oz99vb////Yj+v8AAAAAXRSTlMAQObYZgAABLlJREFUaN7tmtmarCgQhE+yJ4sQ7/+ycwECWnWmNqvb+ca8qW7b0r8hIjNB//y54oorrrjiivMGEdE5qVqcletUcHQvzsr1+3D0IM7K9Ut09EKck+on4ejNOCvXd+HogDgXl3D+i3QfDpUG9Dfg6JAA7LFwdGAs4MPgPiMJfHMoIn0Od8QoWSDsjzGK5rjgXbjj5jAAi5isqp1fUEO9TncUlXY+beiU4ZQb1xLZyJfm9SgsZThWCtnoEtl1uEryFnCviO4gLKE5JHQMroMTFkUOQAqsBRFR2urw+1za+lRWrhScnoQmiaRR43f/rF3fRZlubTiuk4YMJPno2w54roC9W4Hmn7uYNHnA/C2r8PQVdSicEEQklloW5XR1MYmJREG+4w9TicL4ijlyXmMtOaWVxbk8qm3O3VWEBDSqAIQmxPxsAXsWLtZbMc2fdndaRhH7I8hYdvk41asdBcf1BqvP2qdGlg+KlZJDoZ2Od5P/Ahyrv1rAojS/ZSISeVOaSGQgeCKx9avoCg0N3r5t14CiprRapVstIDQgGqsg8jvXMVAAooC4EXzpCg2tkj3db95pJIoYtTB3TyZ4alcVgCa9K0MSyA5QEgAyi8kUXf/ixX7zTpsTOPS0CkFmzf2JcuURGU6UbaKnBBgNGJK+AEDQ9ysCEeEtu2o3qlDyTgtAkwVQkI0kikgcMzjBLztnOiCttxU2A0Cy7b/d6l/HV+FGLwEskbVcU4EjaXWzAHE9IfLckNXvFxRJtKyjZBKA6uZVqURErjYGRb7giFGE2Gqp5TRXnoYFyACRjSSDnWzEUtN+HKOkExrppP96o0XTC3AKWHorkSehS9Flout5sp0fdlm6HuA5S+ik25JmXDB618iU9e65eZ3NHet9lOWUzUj1rp5nbs6f86vZ/aHBbdfRJA2nMg3+A7h5vcZYehfEY36D4NDTwnZ9x1jdIXf5pSUnxKYUqTmsliu9u3oA14qn0M6vvWxOHEcRZJSCRKEdCXN5tBiJG/tRIgXEAuSU0uj7Is/t6CNHWKXHAgShCsMMeXsAxfSy2IptHzc1RniX1ETBQiKsV14SW/38ds6k6ZZFer8lV3nbDMCL0Wf2z+RFnAueb+V3zn+aiIRhZq1e3msaUlO7erNuutQRNWvhqti6O8OrDcuuT0/hk42wdsKYw4Ao15zsqvyTXrb95ug79b9uIrUm+lO4NodCu768S7nK2+pugZaVxTq6exZx0wx/toU4yrHn1ea5rsndkHezACMRkQ3+NvuvCTHQgXSbfr+tyfU6SeVev2mRXfvLDVyafHzg0AUsLfv09lAMeTcraEB4IFRtybCr/0Ta6W/AjTlM8ETacirTwDRiYAECUUFJAN4apzfg+hzKgNKTOe8a2tXCtoogiO9xzXACUNr1rZgc2Sge8q4WkL1eK96WoC/t80+LzDocy6gRarddqgrszz5+GHZdAmt5x4O8rCt36X74sUhPZeH+jndVWBI/jLUtYGy2/eaU+D/S17Hb+Xyzmvu9Z1s3lzS7DYPffOR2c2G5fJS/zvdw8oRPKE//WPesT8L/z681nPlVkFfgrneOXoM760tk1xuB/93XKAfcnyuuuOKKK34g/gEyGFhmEEAbdAAAAABJRU5ErkJggg==';
+				                    var nview = mui.createHeadView({
+				                    	viewId:'task-order',
+										backgroundColor: '#293948',
+										borderColor:'#293948',
+										titleColor:'#ffffff',
+										title: '任务明细',
+										fontSize:'18px',
+										rightIcon:true,
+						                rightIconBase:base,
+										textAlign:'left'
+									});
+									_self.opener().close();									
+					            	openView({
+					            		url:'task-order.html',
+					            		id:'task-order'
+					            	},{},{docId:result.doc_id,flowType:result.flow_type,flow:result.flow,txtId:result.txtId},nview);
+                					
+                				}else{
+                					plus.nativeUI.toast("审批失败，请重新提交");
+                				}
+                			},error:function(){
+                				plus.nativeUI.toast("网络错误");
+                			}
+                		})
+                		break;
+                		case "back":
+                		mui.back();
+                		break;
+                	}
+                });
+			});
+			
+
+		</script>
+	</body>
+</html>

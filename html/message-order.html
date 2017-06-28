@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>二级页面</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet"  href="../dest/css/message.min.css"/>	
+	</head>
+	<body>
+		<div class="mui-content" id="message-order"></div>
+		<template  id="message-order-tpl">
+			<ul class="mui-table-view">
+			    {%_.each(items,function(item){%}
+			    	<li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" data-id="{%=item.id%}">
+		                	{%=item.name%}
+		                </a>
+		            </li>
+			    {%})%}
+	        </ul>
+		</template>
+		<script src="html5plus://ready"></script>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script type="text/javascript">
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var res = null;
+			var templeteId = null;
+			var templeteName =null;
+			var _self;
+			var data;
+			var w;
+			var orderTpl  = document.getElementById("message-order-tpl");
+			var order = document.getElementById("message-order");
+			mui.init();
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener('plusready',plusReady,false);
+			}
+			function plusReady(){
+				_self = plus.webview.currentWebview();
+				_self.setPullToRefresh({
+					support: true,
+					height: '60px',
+					range: '100px',
+					style: 'circle',
+					offset: '1px'
+				}, pulldownRefresh);
+				w = plus.nativeUI.showWaiting('',{padlock:true});
+				templeteId = _self.templeteId;
+				templeteName = _self.templeteName;
+				data ={
+					"templete_id":templeteId,
+					"token":token
+				}
+				getData();
+			}
+			function getData(){
+				mui.ajax(URL+'/api/NotificationMessage/GetLevel2',{
+					type:'POST',
+					data:data,
+					dataType:'json',
+					headers:{'Content-Type':'application/json'},
+					success:function(e){
+						var isSuccess = e.success;
+						if(isSuccess){
+							res = e;
+						    w.close();
+							var orderHtml = _.template(orderTpl.innerHTML);
+						    order.innerHTML = orderHtml(e); 
+						}else{
+							w.close();
+							console.log("false");
+							plus.nativeUI.toast('刷新失败,请重新刷新！')
+						}	
+					},error:function(){
+						w.close();
+						console.log("error");
+					}
+				});
+			}
+            function pulldownRefresh(){
+            	setTimeout(function() {
+					getData();
+					_self.endPullToRefresh();
+				}, 1500);
+            }
+            
+            mui("#message-order").on('tap','li a',function(){
+            	var self = this;
+            	var dataId  =this.getAttribute("data-id");
+            	var selfUrl = 'message-order-detail.html';
+		    	var selfId = 'message-order-detail';
+		    	var nview = mui.createHeadView({
+					viewId:selfId,
+					backgroundColor: '#293948',
+					borderColor:'#293948',
+					titleColor:'#ffffff',
+					title: templeteName,
+					fontSize:'18px',
+					textAlign:'left'
+				});
+				openView({
+					url:selfUrl,
+					id:selfId
+				},{},{
+					templeteId:templeteId,
+					dataId:dataId
+				},nview);	
+           });
+		</script>
+	</body>
+
+</html>

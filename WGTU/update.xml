@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<wgtu appid="H5FAFA68F">
+	<basis version="1.0" />
+	<remove>
+		<item path="img/cbd.jpg"/>
+	</remove>
+</wgtu>

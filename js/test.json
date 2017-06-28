@@ -1,0 +1,15 @@
+{
+    "appid":"飞天兔",
+    "iOS":{
+    	"version":"1.0.1",
+    	"title":"飞天兔+(1.0.1)版本",
+    	"note":"1",
+    	"url":"2"
+    },
+    "Android":{
+    	"version":"1.0.1",
+    	"title":"飞天兔+(1.0.1)版本",
+    	"note":"测试版本更新",
+    	"url":"http://www.baidu.com"
+    }
+}

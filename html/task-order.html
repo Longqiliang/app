@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>审批意见</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task-order.min.css"/>
+	</head>
+	<body>
+		<div class="mui-content content-h-footet">
+			<div id="cotent-header"></div>
+		    <div id="journalize"></div>   
+		</div>
+	    <footer class="order-foot">
+	    	<p class="order-opinion">
+	    		<span>审批意见：</span><span></span>
+	    	</p>
+	    </footer>
+	    <template id="journalize-tpl">
+			<h3 class="order-tit">
+				分录({%=data_detail.length%}行)-
+				{%_.each(_.sortBy(columns_detail_compact,'display_index'),function(item,index){%}
+				    {%if(item.visible){%}
+				        {%if(index==columns_detail_compact.length-1){%}
+						    {%=item.display_name%}
+					    {%}else{%}
+			                {%=item.display_name%},
+			            {%}%}   
+				    {%}%}
+		        {%})%}
+			</h3>
+		    <ul class="mui-table-view">
+		    {%_.each(data_detail,function(item,t){%}
+		        <li class="mui-table-view-cell">
+		        	<a class="mui-navigate-right" data-index="{%=t%}">
+		        	{%_.each(_.sortBy(columns_detail_compact,'display_index'),function(i,index){%}
+			        	{%if(i.visible){%}
+				        	{%if(index==columns_detail_compact.length-1){%}
+				        	    {%=item[i.display_name]%}
+				        	{%}else{%}
+				        	    {%=item[i.display_name]%},
+				        	{%}%}
+			        	{%}%}
+			        {%})%} 
+		        	</a>
+		        </li>    
+		    {%})%}
+	        </ul>
+		</template>
+		<template id="header-tpl">
+			<h2 class="order-tit">供应商付款申请</h2>
+			<ul class="order-detail">		
+		        {%_.each(_.sortBy(columns_header,'display_index'),function(item){%}
+		            {%if(item.visible){%}
+		        	<li class="order-info">
+		               <span class="order-info-tit">{%=item.display_name%}</span>
+		               {%=data_header[item.column_name]%}  
+		            </li>
+		            {%}%}
+		        {%})%}   
+		    </ul> 
+		</template>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/createView.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var isShow = false;
+			var headerTpl = document.getElementById("header-tpl");
+			var header = document.getElementById("cotent-header");
+			var journalizeTpl = document.getElementById("journalize-tpl");
+			var journalize=  document.getElementById("journalize");
+			var opinion = document.querySelector(".order-opinion").lastElementChild;
+			var res = null;
+			mui.plusReady(function(){
+				var _self = plus.webview.currentWebview();
+				var docId = _self.docId;
+				var flowType = _self.flowType;
+				var flow = _self.flow;
+				var w = plus.nativeUI.showWaiting();
+				var parentView = _self.opener();
+				switch(parentView.id){
+					case "task-pass":
+					parentView.close('auto',300);
+					break;
+					case "task-nopass":
+					parentView.close('auto',300);
+					break;
+					default:
+					break;
+				}
+				mui.ajax(URL+"/api/VF/GetVFlowDataWithStateByDocID",{
+					data:{
+						"doc_id":docId,
+						"flow_type":flowType,
+						"data_in_flow":flow,
+						"token":token
+					},
+					dataType:'json',
+					type:'POST',
+					headers:{'Content-Type':'application/json'},
+					success:function(result){
+						var isSuccess = result.success;
+						var code = result.code;
+		            	if(isSuccess==true){
+                            var auditingText = result.data_check.auditing_text;
+                            w.close();
+                            res = result;
+	            			var headerHtml  = _.template(headerTpl.innerHTML);
+	            			var journalizeHtml  = _.template(journalizeTpl.innerHTML);
+	            			header.innerHTML = headerHtml(result);
+	            			journalize.innerHTML = journalizeHtml(result);
+	            			opinion.innerHTML = auditingText;
+	            			isShow = true;	
+		            	}else{
+		            		w.close();
+		            		if(code == "3"){
+		            			againData();
+		            		}	
+		            	}	
+					},error:function(){
+						console.log("error");
+						w.close();
+						reloadWvLoad();
+					}
+			    });	
+            });
+			
+			
+				mui("#journalize").on('tap','a',function(){
+					if(!res){
+						return;
+					}
+	//					return;	 
+					var self = this;
+					var docIndex =  self.getAttribute("data-index").trim();
+					    docIndex = parseInt(docIndex);
+					var docDetail = res.columns_detail;
+					var docInfo = res.data_detail[docIndex];
+					var data ={
+						result:{
+							columns_detail:docDetail,
+						    docInfo:docInfo
+						}	
+					}
+					var nview = mui.createHeadView({
+						viewId:'task-order-detail',
+						backgroundColor: '#293948',
+						borderColor:'#293948',
+						titleColor:'#fffff',
+						title: '任务明细',
+						fontSize:'18px',
+						rightIcon:false,
+						textAlign:'left'
+					});
+					openView({
+						url:'task-order-detail.html',
+						id:'task-order-detail',
+						load:true
+					},{},data,nview);
+				});
+		</script>
+	</body>
+
+</html>

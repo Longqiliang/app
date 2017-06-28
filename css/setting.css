@@ -1,0 +1,128 @@
+.mui-bar-nav{
+	background-color: #FFFFFF;
+	box-shadow: inherit;
+}
+.mui-table-view{
+	margin-top: 15px;
+}
+.mui-table-view:before,.mui-table-view:after{
+	height: 0;
+}
+.mui-table-view-cell:after{
+	left: 0;
+}
+.mui-table-view-cell:last-child:after{
+	height: 1px;
+}
+.cell-end{
+	height: 43px;
+}
+.edit-padded{
+	padding: 70px 40px 38px;
+	background-color: #FFFFFF;
+}
+.edit-padded .mui-btn-block{
+	padding: 6px 12px;
+	border-radius: inherit;
+	background-color: #289be5;
+	border-color:#289be5;
+}			
+/*开关部分*/ 
+.mui-switch-blue.mui-active{
+	border: 2px solid #9bd3f6;
+    background-color: #9bd3f6;
+}
+.mui-switch .mui-switch-handle{
+	width: 20px;
+	height: 20px;
+	top: -7px;
+	left: -2px;
+}
+.mui-switch-blue.mui-active .mui-switch-handle{
+	background-color: #299be5;
+}
+.mui-switch.mui-switch-mini{
+	width: 35px;
+	height: 10px;
+}
+/*confirm弹出框*/
+.m-black-dialog {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    z-index: 1500;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+   
+    align-items: center;
+}
+.m-confirm {
+    width: 80%;
+    background-color: #FAFAFA;
+    border-radius: 2px;
+    font-size: 15px;
+    -webkit-animation: zoomIn .15s ease forwards;
+    animation: zoomIn .15s ease forwards;
+    padding: 10px 10px 10px;
+}
+.confirm-hd{
+	text-align: left;
+	padding-bottom: 10px;
+}
+.confirm-hd .confirm-tit{
+	word-break: break-all;
+}
+.confirm-bd{
+	text-align: left;
+    padding: 0 10px;
+    font-size: 14px;
+    color: #000;
+    line-height: 20px;
+    word-break: break-all;
+}
+.confirm-ft{
+	position: relative;
+    line-height: 40px;
+    margin-top: 14px;
+    display: -webkit-flex;
+    display: flex;
+}
+.confirm-ft > a{
+	position: relative;
+    text-align: center;
+    display: block;
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 0 2px;
+}
+.confirm-ft > a.confirm-btn.primary{
+	color: #03ccde;
+}
+@-webkit-keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  50% {
+    opacity: 1;
+  }
+}

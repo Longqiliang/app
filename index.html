@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>首页父窗口</title>
+    <link href="dest/css/mui.min.css" rel="stylesheet"/>
+    <script src="dest/fonts/tabfont.js"></script>
+    <style type="text/css">
+    	.mui-bar-tab .mui-tab-item{
+				color: #90a6b2;
+			}
+		.icon{
+		   width: 1em; height: 1em;
+		   vertical-align: -0.15em;
+		   fill: currentColor;
+		   overflow: hidden;
+		   font-size: 30px;
+		   margin:3px 0 -5px;
+		}
+		
+		.mui-bar-tab .mui-tab-item .icon~.mui-tab-label {
+		    font-size: 12px;
+		    display: block;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		}
+   </style>
+</head>
+<body>
+	<nav class="mui-bar mui-bar-tab" >
+	    <a class="mui-tab-item mui-active" id="defaultTab" data-id='message' data-href='html/message.html' data-text="消息">
+	        <svg class="icon" aria-hidden="true">
+				<use xlink:href="#icon-news"></use>
+			</svg>
+	        <span class="mui-tab-label">消息</span>
+	    </a>
+	    <a class="mui-tab-item" data-id="task" data-href='html/task.html' data-text="任务">
+	        <svg class="icon" aria-hidden="true">
+				<use xlink:href="#icon-task"></use>
+			</svg>
+	        <span class="mui-tab-label">任务</span>
+	    </a>
+	    <a class="mui-tab-item" data-id="application" data-href='html/application.html' data-text="应用">
+	        <svg class="icon" aria-hidden="true">
+				<use xlink:href="#icon-application"></use>
+			</svg>
+	        <span class="mui-tab-label">应用</span>
+	    </a>
+	    <a class="mui-tab-item" data-id="mine" data-href='html/mine.html' data-text="我的">
+	        <svg class="icon" aria-hidden="true">
+				<use xlink:href="#icon-mine"></use>
+			</svg>
+	        <span class="mui-tab-label">我的</span>
+	    </a>
+	</nav>
+	<script src="dest/js/mui.min.js" ></script>	
+	<script src="dest/js/update.min.js"></script>
+	<script src="dest/js/app.min.js" ></script>
+	<script type="text/javascript">
+		var minepage_style = {
+			top:"0px",
+			bottom: '50px'
+		};
+		mui.init();
+		
+		var subpages =[{
+			url:'html/message.html',
+			id:'message'
+		},{
+			url:'html/task.html',
+			id:'task'
+		},{
+			url:'html/application.html',
+			id:'application'
+		},{
+			url:'html/mine.html',
+			id:'mine'
+		}];
+		var subpage_style = {
+//		    top:"44px",
+            top:'0px',
+			bottom: '50px',
+			navigationbar:{
+				backgroundColor:'#1b83fe',
+				titleText:'',
+				titleColor:'#FFFFFF',
+				splitLine:{
+					color:'#cccccc',
+					height:'1px'
+			    }
+			}
+		};
+		var aniShow = {};
+		/**
+		 * 根据id查询子页面的信息
+		 * @param {Object[]} infoList 子页面信息
+		 * @param {String} id 对比的id值
+		 * */
+		var getSubInfoById = function(infoList,id){
+			var result = null;
+			for(var i=0,length = infoList.length;i<length;i+=1){
+				var info = infoList[i];
+				if(info.id == id){
+					result = info;
+					break;
+				}
+			}
+			return result;
+		};
+		
+		mui.plusReady(function(){
+			var mineView = mui.preload({
+				url:'html/mine.html',
+		        id:'mine',
+		        styles:minepage_style
+			});
+			mui.initUpdate();
+			var self = plus.webview.getLaunchWebview();
+			var second = plus.webview.getSecondWebview();
+			var isLogin = localStorage.getItem('$state');
+//			isLogin = false;
+			if(isLogin){
+				//关闭splash页面；
+				var data ={
+					
+				}
+//				plus.navigator.closeSplashscreen();
+				plus.navigator.setFullscreen(false);
+			}else{
+				//显示启动导航
+				mui.openWindow({
+					id: 'login',
+					url: 'html/login.html',
+					styles: {
+						popGesture: "none"
+					},
+					show: {
+						aniShow: 'none'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});	
+			}
+			var activeTab = subpages[0].id;
+			mui(".mui-bar-tab").on('tap','a.mui-tab-item',function(){
+				var _self = this,
+				    targetTab = _self.getAttribute('data-id').trim(),
+				    tabText = _self.getAttribute('data-text').trim(),
+				    webview_style ={
+				    	
+				    };
+				if(targetTab == activeTab){
+					return;
+				}
+				if(~targetTab.indexOf('task')||~targetTab.indexOf('mine')){
+					//启用硬件加速，测试用
+					webview_style.hardwareAccelerated = true;
+				}
+				var _subView = plus.webview.getWebviewById(targetTab);
+				//若不存在则创建
+				if(!_subView){
+					var _subInfo = getSubInfoById(subpages,targetTab);
+					if(targetTab == "mine"){
+						_subView = plus.webview.create(_subInfo.url,_subInfo.id,minepage_style);
+						
+					}else{
+						subpage_style.navigationbar.titleText = tabText;
+						_subView = plus.webview.create(_subInfo.url,_subInfo.id,subpage_style);
+						
+					}					
+				    self.append(_subView);
+				}
+				//显示目标选项卡
+				_subView.show();
+//				//若为iOS平台或非首次显示，则直接显示
+//				if(mui.os.ios||aniShow[targetTab]){
+//					plus.webview.show(targetTab);
+//				}else{
+//					//否则，使用fade-in动画，且保存变量
+//					var temp = {};
+//					temp[targetTab] = "true";
+//					mui.extend(aniShow,temp);
+//					plus.webview.show(targetTab,"fade-in",300);
+//				}
+				//隐藏当前;
+				plus.webview.getWebviewById(activeTab).hide('none');
+				//更改当前活跃的选项卡
+				activeTab = targetTab;
+		    });
+		});
+		
+		//自定义事件，模拟点击“首页选项卡”
+		document.addEventListener('gohome', function() {
+			var defaultTab = document.getElementById("defaultTab");
+			//模拟首页点击
+			mui.trigger(defaultTab, 'tap');
+			//切换选项卡高亮
+			var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+			if (defaultTab !== current) {
+				current.classList.remove('mui-active');
+				defaultTab.classList.add('mui-active');
+			}
+		});
+//		app.quitApp();
+	</script>
+</body>
+</html>

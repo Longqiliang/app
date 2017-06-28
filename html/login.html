@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>飞天兔登录</title>
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />	
+		<link rel="stylesheet" type="text/css" href="../dest/css/login.min.css"/>
+	</head>
+	<body>
+		<div class="mui-content">
+			<div class="app-header">
+				<div class="app-logo">
+					<img src="../dest/img/applogo.png"/>
+				</div>
+			    <h1 class="app-title ">FetetO&nbsp;Cloud&nbsp;APP</h1>
+			</div>
+			<div class="app-form-bg">				
+				<p>欢迎回来！</p>
+				<form id='login-form' class="mui-input-group">
+					<div class="mui-input-row">
+					    <label class="mui-code" for="corpid">企业代码</label>
+					    <input type="text" class="mui-input-clear mui-input" id="corpid" placeholder="请输入企业代码" />
+					</div>
+					<div class="mui-input-row">
+						<label for="account">用户名</label>
+						<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入账号" maxlength="16">
+					</div>
+					<div class="mui-input-row">
+						<label for="password">密码</label>
+						<input id='password' type="password" class="mui-input-password mui-input " placeholder="请输入密码" maxlength="16">
+					</div>
+					<div class="mui-input-row">
+						<label for="autoLogin">自动登录</label>
+						<div id="autoLogin" class="mui-switch mui-switch-blue">
+							<div class="mui-switch-handle "></div>
+						</div>
+					</div>						
+				</form>
+			
+			</div>
+			<div class="mui-content-padded">
+				<button id='login' class="mui-btn  login-btn"  data-loading-text="登录中..." >登录</button>
+			</div>
+		</div>
+		<script src="../dest/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../dest/js/app.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($,doc){
+				$.init({
+					statusBarBackground: '#72757e'
+				});
+				var state = JSON.parse(localStorage.getItem("$state")) || {};
+				var autoLogin = localStorage.getItem("autoLogin");
+				var loginName  =state.loginName || '';
+				var companyCode = state.companyCode || '';
+				var corpidBox = doc.getElementById("corpid")
+				var accountBox = doc.getElementById('account');
+				var passwordBox = doc.getElementById('password');
+				var loginButton = doc.getElementById('login');
+				var autoLoginBtn = doc.getElementById("autoLogin");
+				corpidBox.value = companyCode;
+				accountBox.value = loginName;
+				console.log(autoLogin);
+				autoLoginBtn.classList[autoLogin ? 'add' : 'remove']('mui-active');
+				$.back=function(){
+					plus.runtime.quit();
+				};
+				$.plusReady(function(){
+					if(mui.os.ios){
+					    plus.navigator.setFullscreen(true);
+				    }
+				    plus.navigator.closeSplashscreen();
+					var ws = plus.webview.currentWebview();
+					var login = plus.webview.getWebviewById('login');
+					var toMain = function(e,result) {
+                        if(e){
+                        	plus.nativeUI.toast("登录成功");
+                        	$(e).button('reset');
+                        }	
+//                  	setTimeout(function(){
+//                      	var wvs=plus.webview.all();
+//                      	console.log(wvs);
+//				            for(var i=0;i<wvs.length;i+=1){
+//				                if(ws.id!=wvs[i].id){
+//				                    plus.webview.close(wvs[i]);
+//				                }
+//				            }
+			            plus.runtime.restart();
+//                      },1000);
+					};
+					autoLoginBtn.addEventListener('toggle',function(e){
+						var isActive = e.detail.isActive;				
+						localStorage.setItem('autoLogin',isActive);
+					})
+					loginButton.addEventListener('tap',function(e){
+						var _this = this;
+						var loginInfo ={
+							"company_code":corpidBox.value,
+							"user_name":accountBox.value,
+							"password":passwordBox.value
+						};
+						$(this).button('loading');
+						
+						app.login(loginInfo, function(err) {
+							if (err) {
+                                console.log(err);	                                
+                                $(_this).button('reset');
+                                plus.nativeUI.toast(err);
+								return;
+							}else{
+								toMain(_this);
+							}
+						});
+						
+					});					
+				})
+
+			}(mui,document));			
+		</script>
+	</body>
+</html>

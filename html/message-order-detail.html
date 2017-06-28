@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>三级页面</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../dest/css/task-order.min.css"/>
+		<style type="text/css">
+			.order-detail.order-tab-view .order-info-tit{
+				min-width: 7em;
+				padding-right:1.3rem ;
+			}
+		</style>
+	</head>
+	<body>
+	    <div class="mui-content" id="message-detail"></div>
+		<template id="message-detail-tpl">
+			<h2 class="order-tit">项目详细</h2>
+	        <ul class="order-detail order-tab-view">
+        		{%_.each(items,function(item){%}
+    			<li class="order-info">
+	        		<span class="order-info-tit">{%=item.key%}</span>
+	        		{%=item.value%}
+	        	</li>
+        		{%})%}	
+	        </ul>
+		</template>
+		<script src="html5plus://ready"></script>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js"></script>
+		<script type="text/javascript">
+			var _self;
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			mui.init();
+			var detailTpl = document.getElementById("message-detail-tpl");
+			var detail = document.getElementById("message-detail");
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener('plusready',plusReady,false);
+			}
+			function plusReady(){
+				var _self = plus.webview.currentWebview();
+				var w = plus.nativeUI.showWaiting();
+				var templeteId = _self.templeteId;
+				var dataId = _self.dataId;
+				var data ={
+					"templete_id":templeteId,
+					"id":dataId,
+					"token":token
+				}
+				mui.ajax(URL+'/api/NotificationMessage/GetLevel3',{
+	            	type:'POST',
+					data:data,
+					dataType:'json',
+					headers:{'Content-Type':'application/json'},
+					success:function(e){
+						var isSuccess = e.success;
+						if(isSuccess){
+							w.close();
+							var detailHtml = _.template(detailTpl.innerHTML);
+			                detail.innerHTML = detailHtml(e); 
+						}else{
+							w.close();
+							console.log("false");
+						}	
+					},error:function(xhr,type,errorThrown){
+						w.close();
+						console.log(errorThrown);
+					}
+	            });
+			}
+            
+		</script>
+		
+	</body>
+
+</html>

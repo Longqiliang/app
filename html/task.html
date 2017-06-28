@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>任务</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../dest/css/mui.min.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="../dest/css/task.min.css"/> 
+        
+	</head>
+
+	<body>
+		<div class="mui-content">
+		    <ul class="mui-table-view" id="task-type">
+	            <li class="mui-table-view-cell">
+	                <a href="javascript:void(0)" data-href="task-pending.html" data-id="task-pending" data-text="待处理任务">
+	                    <span class="approval-icon-pending"></span>
+	                    <span class="approval-business-tit">所有待处理任务</span>
+	                </a>
+	            </li>
+	            <li class="mui-table-view-cell">
+	                <a href="javascript:void(0)" data-href="task-finish.html" data-id="task-finish" data-text="已处理任务">
+	                    <span class="approval-icon-finish"></span>
+	                    <span class="approval-business-tit">所有已处理任务</span>
+	                </a>
+	            </li>
+	        </ul>
+		    <div class="mui-slider ">
+		        <div class=" mui-segmented-control  task-oreder-tit">
+		            <a class="mui-control-item mui-active" href="#pending-order">待处理任务类型</a>
+		            <a class="mui-control-item" href="#finish-order">已处理任务类型</a>
+		        </div>
+		        <div id="task-order">
+		        	<div id="pending-order" class="mui-control-content mui-active">
+		            	<div id="pending-scroll" class="mui-scroll-wrapper"><div class="mui-scroll"></div></div>
+		            </div>
+		            <div id="finish-order" class=" mui-control-content">
+		                <div id="finish-scroll" class="mui-scroll-wrapper"><div class="mui-scroll"></div></div>    
+		            </div>
+		        </div>
+		    </div>	
+		</div>
+		<template id="task-oreder-tab">
+			<ul class="mui-table-view approval-table-view">
+				{%_.each(items,function(i){%}
+				<li class="mui-table-view-cell">
+		            <a class="mui-navigate-right" data-type="{%=i.type_id%}">
+		                <span class="approval-icon-order"></span>
+		                {%if(status){%}
+		                <span class="approva-oreder-tit" data-id="task-finish">{%=i.type_name%}</span>	
+		                {%}else{%}
+		            	<span class="approva-oreder-tit" data-id="task-pending">{%=i.type_name%}&#40;{%=i.count%}&#41;</span>
+		                {%}%}    
+		            </a>
+		        </li>	
+				{%})%}	            	
+			</ul>		
+		</template>
+		<script src="html5plus://ready"></script>
+		<script src="../dest/js/mui.min.js"></script>
+		<script src="../dest/js/underscore.min.js" ></script>
+		<script src="../dest/js/createView.min.js" ></script>
+		<script src="../dest/js/mui.pullToRefresh.min.js"></script>
+		<script src="../dest/js/mui.pullToRefresh.material.min.js"></script>
+		<script type="text/javascript">			
+			mui.init({swipeBack: false});
+			var state = JSON.parse(localStorage.getItem("$state")) || {};
+			var token = state.token || '';
+			var URL = state.host || '';
+			var deceleration = mui.os.ios?0.003:0.0009;
+			var page_style ={
+            	top:'0px',
+            	bottom:'0px'
+            };
+            var w,timer;
+            var taskTabTpl = document.getElementById("task-oreder-tab");
+            var pendingTask  = document.getElementById("pending-scroll");
+            var finishTask = document.getElementById("finish-scroll");
+            mui('.mui-scroll-wrapper').scroll({
+				bounce: false,
+				indicators: false, //是否显示滚动条
+				deceleration:deceleration
+			});
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener('plusready',plusReady,false);
+			}
+			window.addEventListener('reloadData',function(){
+				clearTimeout(timer);
+				getPendingData();
+			})
+			function plusReady(){
+			    w=plus.nativeUI.showWaiting('',{padlock:true});
+                getPendingData();
+				mui.each(document.querySelectorAll('.mui-scroll'), function(index, pullRefreshEl) {
+					mui(pullRefreshEl).pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								setTimeout(function() {
+									clearTimeout(timer);
+								    getPendingData();
+									var parentId = self.element.parentNode.id;
+									switch(parentId){
+										case "pending-scroll":
+										break;
+										case "finish-scroll":
+										break;
+										default:
+										return;
+									}
+									self.endPullDownToRefresh();
+								}, 1000);
+							}
+						}
+					});
+				});
+//				mui('#task-type').on('tap','a',function(){
+//					var self = this,
+//						selfUrl = self.getAttribute("data-href"),
+//						selfText = self.getAttribute("data-text"),
+//						selfId = self.getAttribute("data-id");
+//						openView({
+//								url:selfUrl,
+//								id:selfId
+//							},page_style,{text:selfText});
+//				});
+				
+				mui("#task-order").on("tap","a",function(){	
+					var flowType = this.getAttribute("data-type");
+					    flowType = parseInt(flowType);
+//					    if(this.)
+                    var selfId =  this.lastElementChild.getAttribute("data-id").trim();
+                    var selfUrl,title;
+                    if(!selfId){
+                    	return;
+                    }
+                    switch(selfId){
+                    	case "task-pending":
+                    	selfUrl = "task-pending.html";
+                    	title = '待处理任务';
+                    	break;
+                    	case "task-finish":
+                    	selfUrl = "task-finish.html";
+                    	title = '已处理任务';
+                    	break;
+                    }
+					var nview = mui.createHeadView({
+						viewId:selfId,
+						backgroundColor: '#1b83fe',
+						borderColor:'#cccccc',
+						titleColor:'#ffffff',
+						title: title,
+						fontSize:'18px',
+						textAlign:'left'
+					});
+					openView({
+						url:selfUrl,
+						id:selfId
+					},page_style,{flowType:flowType},nview);    
+				});
+			}
+//待处理任务数据
+            function getPendingData(){
+            	mui.ajax({
+					type:"POST",
+					url:URL+"/api/VF/GetWaitAuditingVFlowTypes",
+		            data:{"token": token},
+		            dataType:'json',
+		            timeout:6000,
+		            headers:{'Content-Type':'application/json'},
+		            success:function(result){
+		            	var isSuccess = result.success;
+		            	var code = result.code;
+	//	          	console.log(isSuccess);
+		            	if(isSuccess==true){
+	//	            		console.log(token);
+	                        w.close();
+	            			var tplHtml = _.template(taskTabTpl.innerHTML);                              	            		
+	            			pendingTask.childNodes[0].innerHTML = tplHtml(result);
+	            			result.status = true;
+	            			finishTask.childNodes[0].innerHTML = tplHtml(result);
+	            			timer = setTimeout(getPendingData,60000);
+		            	}else{
+		            		w.close();
+		            		if(code == "3"){
+		            			againData();
+		            		}	
+		            	}
+		            },
+		            error:function(xhr,type,errorThrown){
+		            	reloadWvLoad();
+					}
+			    });      
+            }
+   		</script>
+    </body>
+</html>
